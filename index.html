@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit AI Top 10 - 每日精选</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="reddit-icon">r</span>
+                <h1>AI社区每日十大</h1>
+            </div>
+            <div class="actions">
+                <button id="refreshBtn" class="btn btn-primary">
+                    <span class="icon">↻</span> 刷新
+                </button>
+                <button id="translateBtn" class="btn btn-secondary">
+                    <span class="icon">文</span> 翻译全部
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在加载 Reddit AI 热门话题...</p>
+        </div>
+
+        <div class="posts-container" id="postsContainer"></div>
+
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <p>加载失败，请稍后重试</p>
+            <button class="btn btn-primary" onclick="loadPosts()">重试</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>数据来源: Reddit r/artificial & r/MachineLearning | 每小时更新</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
