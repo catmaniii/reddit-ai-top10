@@ -59,7 +59,10 @@ async function loadPosts() {
 }
 
 async function fetchPostsFromSubreddit(subreddit) {
-    const url = `https://www.reddit.com/r/${subreddit}/top.json?t=day&limit=${POSTS_PER_SUBREDDIT}`;
+    // 使用 CORS 代理绕过限制
+    const proxyUrl = 'https://api.allorigins.win/raw?url=';
+    const redditUrl = `https://www.reddit.com/r/${subreddit}/top.json?t=day&limit=${POSTS_PER_SUBREDDIT}`;
+    const url = proxyUrl + encodeURIComponent(redditUrl);
     
     const response = await fetch(url, {
         headers: {
