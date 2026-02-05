@@ -249,49 +249,23 @@ async function translatePost(index) {
     }
     
     try {
-        // Using LibreTranslate (free, no API key required)
-        const response = await fetch('https://libretranslate.com/translate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                q: textToTranslate,
-                source: 'auto',
-                target: 'zh-CN'
-            })
-        });
+        // Using Google Translate API (no CORS issues)
+        const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=${encodeURIComponent(textToTranslate)}`);
+        const data = await response.json();
         
-        if (!response.ok) {
+        if (data && data[0]) {
+            const translatedText = data[0].map(item => item[0]).join('\n');
+            // Cache the result
+            translatedCache.set(post.id, translatedText);
+            textEl.textContent = translatedText;
+            contentEl.classList.add('show');
+        } else {
             throw new Error('Translation failed');
         }
-        
-        const data = await response.json();
-        const translatedText = data.translatedText;
-        
-        // Cache the result
-        translatedCache.set(post.id, translatedText);
-        
-        textEl.textContent = translatedText;
-        contentEl.classList.add('show');
     } catch (error) {
         console.error('Translation error:', error);
-        
-        // Fallback: try alternative translation service
-        try {
-            const altResponse = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=${encodeURIComponent(textToTranslate)}`);
-            const altData = await altResponse.json();
-            
-            if (altData && altData[0]) {
-                const translatedText = altData[0].map(item => item[0]).join('\n');
-                translatedCache.set(post.id, translatedText);
-                textEl.textContent = translatedText;
-                contentEl.classList.add('show');
-            }
-        } catch (altError) {
-            textEl.textContent = '翻译失败，请稍后重试';
-            contentEl.classList.add('show');
-        }
+        textEl.textContent = '翻译失败，请稍后重试';
+        contentEl.classList.add('show');
     }
 }
 
